@@ -71,7 +71,7 @@ const firstMeal = [{
     status: 'start'
 }, {
     id: 1014,
-    name: "קוגל תפוחי אדמה",
+    name:"אורז",
     PreparationTime: '00:40',
     status: 'start'
 }, {
@@ -122,41 +122,16 @@ const thirdMeal = [{
     PreparationTime: '00:20',
     status: 'start'
 }]
-const DinnerWithGuests = [{
-    id: 1024,
-    name: "סלט חצילים עם בטטה",
-    PreparationTime: '00:20',
-    status: 'start'
-}, {
-    id: 1025,
-    name: "דג סלומון",
-    PreparationTime: '00:20',
-    status: 'start'
-}, {
-    id: 1026,
-    name: "בשר",
-    PreparationTime: '00:20',
-    status: 'start'
-}, {
-    id: 1027,
-    name: "סלט תפוא",
-    PreparationTime: '00:30',
-    status: 'start'
-}, {
-    id: 1028,
-    name: "הרינג",
-    PreparationTime: '00:25',
-    status: 'start'
-}]
+
 export const getBasicCooking = () => {
-    return BasicCooking;
+    return new Promise((resolve) => resolve(BasicCooking));
 }
 export const getFirstMeal = () => {
-    return firstMeal;
+    return new Promise((resolve) => resolve(firstMeal));
 }
 export const getSecondMeal = () => {
-    return secondMeal;
+    return new Promise((resolve) => resolve(secondMeal));
 }
 export const getThirdMeal = () => {
-    return thirdMeal;
+    return new Promise((resolve) => resolve(thirdMeal));
 }

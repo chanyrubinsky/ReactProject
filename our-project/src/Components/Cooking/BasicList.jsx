@@ -1,1 +1,0 @@
-const [basicDishes, setBasicDishes] = useState([]);

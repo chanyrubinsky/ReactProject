@@ -1,10 +1,15 @@
 import React from "react";
 
-export default function OneTask({ task,arr,setarr }) {
+export default function OneTask({ task, setarr }) {
 
 
-const To_delete = (id) => {
-        setarr(arr.filter((index) => index.id !== id));}
+/*const To_delete = (id) => {
+        /*setarr(arr.filter((index) => index.id !== id));
+      setArr(prevArr => prevArr.filter(item => item.id !== id));}*/
+ const To_delete = (id) => {
+  setarr(prevArr => prevArr.filter(item => item.id !== id));
+};
+     
 
 
   return (

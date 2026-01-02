@@ -14,14 +14,18 @@ const ListTask = () => {
   const [hostingTasks, setHostingTasks] = useState([]);
   const [guestTasks, setGuestTasks] = useState([]);
 
-
+useEffect(() => {
+  getHomeTasks().then(data => setHomeTasks(data));
+  getHostingTasks().then(data => setHostingTasks(data));
+  getGuestTasks().then(data => setGuestTasks(data));
+}, []);
  
 
-  useEffect(() => {
+  /*useEffect(() => {
     getHomeTasks().then(data => setHomeTasks(prev => [...prev, ...data]));
     getHostingTasks().then(data => setHostingTasks(prev => [...prev, ...data]));
     getGuestTasks().then(data => setGuestTasks(prev => [...prev, ...data]));
-  }, []);
+  }, []);*/
 
   //פונקציה שמציגה  כל מערך של משימות//
   /*const renderTasks4 = (arr,setarr) => {

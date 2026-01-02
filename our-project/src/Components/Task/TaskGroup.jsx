@@ -24,7 +24,7 @@ export default function TaskGroup({ arr, setarr }) {
       <hr />
 
       
-      <button onClick={() => setShowInput(true)}>אוסף משימה</button>
+      <button onClick={() => setShowInput(true)}>הוסף משימה</button>
 
       {/* ה-input שמופיע רק בלחיצה */}
       {showInput && (
@@ -34,7 +34,7 @@ export default function TaskGroup({ arr, setarr }) {
             value={newTaskTitle}
             onChange={e => setNewTaskTitle(e.target.value)}
           />
-          <button onClick={handleAddTask}>אוסף משימה</button>
+          <button onClick={handleAddTask}>הוסף משימה</button>
         </div>
       )}
     </div>

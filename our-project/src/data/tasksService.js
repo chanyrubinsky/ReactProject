@@ -1,6 +1,6 @@
 
 
-/* ===== משימות לשבת ביתית ===== */
+/*  משימות לשבת ביתית  */
 const homeTasks = [
   { id: 1, title: "שטיפת רצפות", duration: 60, recommendedDay: "חמישי", done: false },
   { id: 2, title: "ניקוי מטבח", duration: 45, recommendedDay: "חמישי", done: false },
@@ -14,7 +14,7 @@ const homeTasks = [
   { id: 10, title: "הכנת נרות לשבת", duration: 5, recommendedDay: "שישי", done: false }
 ];
 
-/* ===== משימות לשבת שמתארחים בה ===== */
+/*  משימות לשבת שמתארחים בה  */
 const hostingTasks = [
   { id: 1, title: "אריזת מזוודה", duration: 45, recommendedDay: "שישי", done: false },
   { id: 2, title: "בחירת בגדי שבת", duration: 20, recommendedDay: "חמישי", done: false },
@@ -28,7 +28,7 @@ const hostingTasks = [
   { id: 10, title: "אריזת מוצרי היגיינה", duration: 20, recommendedDay: "חמישי", done: false }
 ];
 
-/* ===== תוספות לאירוח בבית ===== */
+/*  תוספות לאירוח בבית  */
 const guestTasks = [
   { id: 1, title: "סידור חדר אורחים", duration: 40, recommendedDay: "חמישי", done: false },
   { id: 2, title: "הכנת מצעים לאורחים", duration: 25, recommendedDay: "חמישי", done: false },
@@ -42,19 +42,17 @@ const guestTasks = [
   { id: 10, title: "הכנת סלסלת אירוח", duration: 25, recommendedDay: "שישי", done: false }
 ];
 
-/* ===== פונקציות שרת מדומה (Promise בלבד) ===== */
 
-export const getHomeTasks = () =>
-  new Promise(resolve => {
-    setTimeout(() => resolve(homeTasks), 300);
-  });
 
-export const getHostingTasks = () =>
+export const getHomeTasks = () => Promise.resolve(homeTasks);
+export const getHostingTasks = () => Promise.resolve(hostingTasks);
+export const getGuestTasks = () => Promise.resolve(guestTasks);
+/*export const getHostingTasks = () =>
   new Promise(resolve => {
-    setTimeout(() => resolve(hostingTasks), 300);
+    setTimeout(() => resolve(hostingTasks), 0);
   });
 
 export const getGuestTasks = () =>
   new Promise(resolve => {
-    setTimeout(() => resolve(guestTasks), 300);
-  });
+    setTimeout(() => resolve(guestTasks), 0);
+  });*/

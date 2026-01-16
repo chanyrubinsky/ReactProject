@@ -67,16 +67,25 @@ export const getBasicShopingList = () => {
     });
 };
 export const addNewMeal = (product) => {
+    
     listMeal.push(product);
+    return Promise.resolve([...listMeal])
 }
 export const addNewHostingProduct = (product) => {
+    
     hostingShopingList.push(product);
+    return Promise.resolve([...hostingShopingList])
 }
-export const addNeeTravelingProduct = (product) => {
+export const addNewTravelingProduct = (product) => {
+    
     travelingShopingList.push(product);
+    return Promise.resolve([...travelingShopingList])
 }
 export const addNewBasicProduct = (product) => {
+    
     basicShopingList.push(product);
+    return Promise.resolve([...basicShopingList]);
+
 }
 export const removeMealById = async (id) => {
     const idx = listMeal.findIndex(item => item.id === id);

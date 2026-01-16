@@ -1,13 +1,15 @@
 
-export const ShopingProduct = (props) => {
-    const { product } = props;
+export const ShopingProduct = ({product,productList,setProductList}) => {
     console.log(product);
-    
+    const deleteProduct = (id) => {
+        setProductList(productList.filter((index) => index?.id !== id));}
     return (
         
-        <div>
-            <li>{product.name} 
+        <>
+            <li>{product?.name} 
             </li>
-        </div>
+            <button onClick={() => deleteProduct(product?.id)}>למחיקה</button>
+        </>
+          
     );
 }

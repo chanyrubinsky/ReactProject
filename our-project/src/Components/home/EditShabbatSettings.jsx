@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ShabbatSettings } from "./ShabbatSettings";
 
-export const EditShbbatSettings = () => {
+export const EditShabbatSettings = () => {
 
     const [isTraveling, setIsTraveling] = useState(false);
     const [editSettings, setEditSetting] = useState(true);
@@ -60,6 +60,6 @@ export const EditShbbatSettings = () => {
             <button onClick={handleSaveSettings}>שמירת הגדרות</button>
             <button onClick={resetSettings}>איפוס הגדרות</button>
         </div>
-        {/* {editSettings ? '' : <ShabbatSettings shabbatSettings={shabbatSettings}/>} */}
+        {!editSettings ? <ShabbatSettings shabbatSettings={shabbatSettings}/>:'' }
     </>
 }

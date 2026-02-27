@@ -1,0 +1,43 @@
+import { useState } from 'react';
+import { useContext } from 'react';
+import { Taskscontext } from '../../shopingContext/shoping.context.jsx';
+
+export const NewProduct = ({ listType }) => {
+  const { addMeal, addBasic, addHosting, addTraveling, setIsEdit } = useContext(Taskscontext);
+  const [name, setName] = useState('');
+  const [amount, setAmount] = useState('');
+
+  const onSave = () => {
+    const product = { id: Date.now(), name, amount, status: /* לפי listType */ };
+    if (listType === 'meal') addMeal(product);
+    if (listType === 'basic') addBasic(product);
+    if (listType === 'hosting') addHosting(product);
+    if (listType === 'traveling') addTraveling(product);
+    setIsEdit(false); // חוזרים להצגה
+  };
+
+  return (
+    <div className="new-product">
+      <input value={name} onChange={e=>setName(e.target.value)} placeholder="שם" />
+      <input value={amount} onChange={e=>setAmount(e.target.value)} placeholder="כמות" />
+      <button onClick={onSave}>שמור</button>
+      <button onClick={()=>setIsEdit(false)}>בטל</button>
+    </div>
+  );
+};
+
+
+{/* בתוך כל חלק של הרשימה */}
+<ul>
+  {basicShopingList.map(b => <ShopingProduct key={b.id} product={b} />)}
+</ul>
+</ul>
+<button onClick={() => { setIsEdit(true); /* אפשר גם לשמור איזה סוג רשימה להוסיף */ setEditingList('basic'); }}>
+  הוסף מוצר
+</button>
+
+
+
+
+
+{ isEdit ? <NewProduct listType={editingList} /> : <DisplayLists /> }

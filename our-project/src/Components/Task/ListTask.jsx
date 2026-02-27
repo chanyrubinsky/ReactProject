@@ -5,7 +5,7 @@ import {
   getHomeTasks,
   getHostingTasks,
   getGuestTasks
-} from '../../data/tasksService';
+} from '../data/tasksService';
 import OneTask from "./OneTask";
 
 const ListTask = () => {

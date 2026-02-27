@@ -1,21 +1,15 @@
 
-export const ShopingProduct = (props) => {
-    const { product } = props;
-    const [isBought, setIsBought] = useState(false);
-    const [amount, setAmount] = useState(product.amount);
-    if (amount > 0 && !isBought) {
-        setIsBought(true);
-    }
+export const ShopingProduct = ({product,productList,setProductList}) => {
     console.log(product);
-    
+    const deleteProduct = (id) => {
+        setProductList(productList.filter((index) => index?.id !== id));}
     return (
         
-        <div>
-            <li>{product.name} 
-                <input type="checkbox" disabled={isBought} />
-               <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} />
-
+        <>
+            <li>{product?.name} 
             </li>
-        </div>
+            <button onClick={() => deleteProduct(product?.id)}>למחיקה</button>
+        </>
+          
     );
 }

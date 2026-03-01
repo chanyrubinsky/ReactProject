@@ -1,26 +1,51 @@
-import { useState } from 'react'
-import { EditShbbatSettings } from './Components/home/EditShabbatSettings'
-import './App.css'
-import { ShopingList } from "./Components/shoping/ShopingList";
+// // import { useState } from 'react'
+// // import { EditShbbatSettings } from './Components/home/EditShabbatSettings'
+// // import './App.css'
+// // import { ShopingList } from "./Components/shoping/ShopingList";
 
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import{ListCooking} from './Components/Cooking/listCooking.jsx' 
-import { ShopingList } from "../src/Components/shoping/ShopingList.jsx";
+// // import { StrictMode } from 'react'
+// // import { createRoot } from 'react-dom/client'
+// // // import{ListCooking} from './Components/Cooking/listCooking.jsx' 
+// // function App() {
+// //   return (
+// //     <>
+// //       <ShopingList/>
+// //        {/* <EditShbbatSettings />   */}
+// //          {/* <ListCooking />  */}
+// //          {/* <ListTask />  */}
+
+// //     </>
+// //   )
+// // }
+
+// // export default App
+// import { ShopingContextProvider } from "./shopingContext/shoping.context.jsx";
+// import { ShopingList } from "./components/ShopingList";
+
+// function App() {
+//   return (
+//     // ה-Provider חייב לעטוף את הכל!
+//     <ShopingContextProvider>
+//       <div className="App">
+//         <ShopingList isEditMode={true} />
+//       </div>
+//     </ShopingContextProvider>
+//   );
+// }
+import { ShopingContextProvider } from "./shopingContext/shoping.context.jsx";
+// וודאי שהנתיב כאן מדויק לקובץ שלך! 
+// אם הוא בתוך תיקיית components, רשמי כך:
+import ShoppingPage  from "./Components/shoping/ShoppingPage.jsx"; 
+
 function App() {
   return (
-    <>
-<<<<<<< HEAD
-      <ShopingList/>
-       <EditShbbatSettings />  
-         {/* <ListCooking />  */}
-         {/* <ListTask />  */}
-
-=======
-    <ShopingList/>
->>>>>>> 7903e5593d475869b242c587a22c231f42d55beb
-    </>
-  )
+    <ShopingContextProvider>
+      <div className="App">
+        {/* העברתי לכאן את ה-isEditMode כדי שתוכלי לשלוט בזה */}
+        <ShoppingPage />
+      </div>
+    </ShopingContextProvider>
+  );
 }
 
-export default App
+export default App;

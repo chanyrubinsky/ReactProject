@@ -1,64 +1,76 @@
 import { useState, useEffect, createContext } from "react";
-import { getlistMeal, getHostingShopingList, getTravelingShopingList, getBasicShopingList } from "../data/shopingProductsList.js";
-// יצירה של קונטקסא, קונטקבט הוא אובייקט שמכיל מידע שאמור להיות משותף לכל הקומפוננטות שמתחתיו
+import {
+    getlistMeal, getHostingShopingList, getTravelingShopingList, getBasicShopingList,
+    addNewBasicProduct, addNeeTravelingProduct, addNewMeal, addNewHostingProduct
+} from "../data/shopingProductsList.js";
+
 export const Taskscontext = createContext();
 
-export const shopingContextProvider = (props) => {
-    console.log("render ShopingList");
-    const [hostingShopingList, gethostingShoping] = useState([]);
-    const [listMeal, getListMeal] = useState([]);
-    const [travelingShopingList, getTravelingShoping] = useState([]);
-    const [basicShopingList, getbasicShoping] = useState([]);
-    const [statusMealList, setStatusMealList] = useState(false);
+export const ShopingContextProvider = (props) => {
+    // מערכי הנתונים
+    const [hostingShopingList, setHostingShopingList] = useState([]);
+    const [listMeal, setListMeal] = useState([]);
+    const [travelingShopingList, setTravelingShopingList] = useState([]);
+    const [basicShopingList, setBasicShopingList] = useState([]);
 
+    // סטטוסים לתצוגה
+    const [statusMealList, setStatusMealList] = useState(true);
     const [statusHostingShopingList, setStatusHostingShopingList] = useState(false);
     const [statusTravelingShopingList, setStatusTravelingShopingList] = useState(false);
 
+    // טעינה ראשונית מה"שרת"
     useEffect(() => {
-        getBasicShopingList().then((data) => {
-            getbasicShoping([...data]);
-            console.log(data);
-        });
-        getTravelingShopingList().then((data) => {
-            getTravelingShoping([...data]);
-            console.log(data);
-        });
-        getHostingShopingList().then((data) => {
-            gethostingShoping([...data]);
-            console.log(data);
-        });
-        getlistMeal().then((data) => {
-            getListMeal([...data]);
-            console.log(data);
-        });
+        getBasicShopingList().then(data => setBasicShopingList([...data]));
+        getTravelingShopingList().then(data => setTravelingShopingList([...data]));
+        getHostingShopingList().then(data => setHostingShopingList([...data]));
+        getlistMeal().then(data => setListMeal([...data]));
     }, []);
 
-    useEffect(() => {
-        const condition = 'traveling';
-
-        if (condition === 'inHome') {
-            setStatusMealList(true);
-        } else if (condition === 'traveling') {
-            setStatusTravelingShopingList(true);
-        } else {
-            setStatusHostingShopingList(true);
+    // פונקציית עזר להוספת מוצר (מעדכנת גם שרת וגם סטייט)
+    const addProduct = async (product, type) => {
+        switch (type) {
+            case "basic":
+                await addNewBasicProduct(product);
+                setBasicShopingList(prev => [...prev, product]);
+                break;
+            case "hosting":
+                await addNewHostingProduct(product);
+                setHostingShopingList(prev => [...prev, product]);
+                break;
+            case "traveling":
+                await addNeeTravelingProduct(product);
+                setTravelingShopingList(prev => [...prev, product]);
+                break;
+            case "meal":
+                await addNewMeal(product);
+                setListMeal(prev => [...prev, product]);
+                break;
+            default:
+                console.error("Unknown product type");
         }
-    }, []);
+    };
 
-   return (
-  <Taskscontext.Provider value={{
-    hostingShopingList,
-    travelingShopingList,
-    basicShopingList,
-    listMeal,
-    statusMealList,
-    statusHostingShopingList,
-    statusTravelingShopingList,
-    setStatusMealList,
-    setStatusHostingShopingList,
-    setStatusTravelingShopingList
-  }}>
-    {props.children}
-  </Taskscontext.Provider>
-);
-}
+    return (
+        <Taskscontext.Provider value={{
+            // נתונים לתצוגה
+            hostingShopingList,
+            listMeal,
+            travelingShopingList,
+            basicShopingList,
+
+            // פונקציית פעולה (Action)
+            addProduct,
+
+            // סטטוסים ושינויים
+            statusMealList, setStatusMealList,
+            statusHostingShopingList, setStatusHostingShopingList,
+            statusTravelingShopingList, setStatusTravelingShopingList,
+            setBasicShopingList,
+            setListMeal,
+            setTravelingShopingList,
+            setHostingShopingList,
+        }}>
+            {props.children}
+        </Taskscontext.Provider>
+    );
+};

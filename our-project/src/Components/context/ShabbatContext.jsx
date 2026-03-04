@@ -1,0 +1,36 @@
+import React, { createContext, useContext, useState } from 'react';
+
+const defaultSettings = {
+    weekParsha: '',
+    timeOfSabbath: '',
+    timeOfLeavingSabbath: '',
+    isTraveling: false,
+    firstMeal: false,
+    secondMeal: false,
+    thirdMeal: false,
+    numberOfGuests: 0,
+};
+
+export const ShabbatContext = createContext({
+    shabbatSettings: defaultSettings,
+    setShabbatSettings: () => {},
+    updateShabbat: () => {},
+    isEditing: false,
+    setIsEditing: () => {},
+});
+
+export const ShabbatProvider = ({ children, initial = defaultSettings }) => {
+    const [shabbatSettings, setShabbatSettings] = useState(initial);
+    const [isEditing, setIsEditing] = useState(false);
+
+    const updateShabbat = (patch) =>
+        setShabbatSettings((prev) => ({ ...prev, ...patch }));
+
+    return (
+        <ShabbatContext.Provider value={{ shabbatSettings, setShabbatSettings, updateShabbat, isEditing, setIsEditing }}>
+            {children}
+        </ShabbatContext.Provider>
+    );
+};
+
+export const useShabbat = () => useContext(ShabbatContext);

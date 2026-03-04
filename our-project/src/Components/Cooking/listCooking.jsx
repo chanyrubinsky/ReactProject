@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getFirstMeal, getSecondMeal, getThirdMeal } from '../../data/cooking';
+import { getFirstMeal, getSecondMeal, getThirdMeal } from '../data/cooking';
 import { Cooking } from './Cooking';
 
 export function ListCooking() {

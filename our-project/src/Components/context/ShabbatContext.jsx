@@ -22,12 +22,24 @@ export const ShabbatContext = createContext({
 export const ShabbatProvider = ({ children, initial = defaultSettings }) => {
     const [shabbatSettings, setShabbatSettings] = useState(initial);
     const [isEditing, setIsEditing] = useState(false);
+    const [basicMealList, setBasicMealList] = useState([]);
+const [firstMealList, setFirstMealList] = useState([]);
+const [secondMealList, setSecondMealList] = useState([]);
+const [thirdMealList, setThirdMealList] = useState([]);
 
     const updateShabbat = (patch) =>
         setShabbatSettings((prev) => ({ ...prev, ...patch }));
 
     return (
-        <ShabbatContext.Provider value={{ shabbatSettings, setShabbatSettings, updateShabbat, isEditing, setIsEditing }}>
+        <ShabbatContext.Provider value={{ shabbatSettings,
+         setShabbatSettings, updateShabbat, isEditing, setIsEditing,basicMealList,
+setBasicMealList,
+firstMealList,
+setFirstMealList,
+secondMealList,
+setSecondMealList,
+thirdMealList,
+setThirdMealList, }}>
             {children}
         </ShabbatContext.Provider>
     );

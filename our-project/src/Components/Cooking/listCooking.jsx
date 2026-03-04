@@ -1,78 +1,111 @@
-import { useState, useEffect } from 'react';
-import { getFirstMeal, getSecondMeal, getThirdMeal } from '../data/cooking';
+import  { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useShabbat } from '../context/ShabbatContext';
 import { Cooking } from './Cooking';
+import { getBasicCooking, getFirstMeal, getSecondMeal, getThirdMeal } from '../data/cooking';
 
+/**
+ * קומפוננטה מרכזית להצגת רשימות הבישולים לכל הסעודות.
+ * משתמשת ב-Context כדי לדעת אילו סעודות להציג והאם המשתמש נוסע.
+ */
 export function ListCooking() {
-    const [firstMeal, setFirstMeal] = useState([]);
-    const [secondMeal, setSecondMeal] = useState([]);
-    const [thirdMeal, setThirdMeal] = useState([]);
-    const [newName, setNewName] = useState("");
-    const [newTime, setNewTime] = useState("");
-    const [newStatus, setNewStatus] = useState("start");
-    useEffect(() => {
-        getFirstMeal().then(data => setFirstMeal(data));
-        getSecondMeal().then(data => setSecondMeal(data));
-        getThirdMeal().then(data => setThirdMeal(data));
-    }, []);
+  const navigate = useNavigate();
+  const { shabbatSettings } = useShabbat(); // קריאה ל-Context
+  const [firstMeal, setFirstMeal] = useState([]);
+  const [secondMeal, setSecondMeal] = useState([]);
+  const [thirdMeal, setThirdMeal] = useState([]);
+  const [newName, setNewName] = useState(""); // שם מאכל חדש
+  const [newTime, setNewTime] = useState(""); // זמן הכנה של מאכל חדש
+  const [newStatus, setNewStatus] = useState("start"); // סטטוס של מאכל חדש
 
+  /**
+   * useEffect שמטעין את רשימות הסעודות בהתאם למצב המשתמש:
+   * - אם נוסע → רק רשימה בסיסית
+   * - אחרת → רק הסעודות שהמשתמש סימן
+   */
+  useEffect(() => {
+    if (shabbatSettings.isTraveling) {
+      getBasicCooking().then(data => setFirstMeal(data)); // נסיעה - משתמשים רק ברשימה בסיסית
+      setSecondMeal([]);
+      setThirdMeal([]);
+    } else {
+      if (shabbatSettings.firstMeal) getFirstMeal().then(data => setFirstMeal(data));
+      if (shabbatSettings.secondMeal) getSecondMeal().then(data => setSecondMeal(data));
+      if (shabbatSettings.thirdMeal) getThirdMeal().then(data => setThirdMeal(data));
+    }
+  }, [shabbatSettings]);
 
-    const AddItem = (setArr) => {
-        if (!newName.trim() || !newTime.trim()) return;
+  /**
+   * פונקציה להוספת פריט חדש לרשימה
+   * @param {Function} setArr - הפונקציה לעדכון המערך של הסעודה
+   */
+  const AddItem = (setArr) => {
+    if (!newName.trim() || !newTime.trim()) return;
 
-        const newItem = {
-            id: Date.now(),
-            name: newName,
-            PreparationTime: newTime,
-            status: newStatus,
-        };
-
-        setArr(prev => [...prev, newItem]);
-
-        setNewName("");
-        setNewTime("");
-        setNewStatus("start");
+    const newItem = {
+      id: Date.now(),
+      name: newName,
+      PreparationTime: newTime,
+      status: newStatus,
     };
-    const display = (arr, setArr) =>
-        arr.map((item) => <Cooking key={item.id} item={item} arr={arr} setArr={setArr} />);
 
-    return (
-        <div>
-            <h2>First Meal</h2>
-            {display(firstMeal, setFirstMeal)}
-            <input type="text" value={newName} onChange={(e) => setNewName(e.target.value)} />
-            <input type="text" value={newTime} onChange={(e) => setNewTime(e.target.value)} />
-            <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
-                <option value="start">Start</option>
-                <option value="in progress">In Progress</option>
-                <option value="completed">Completed</option>
-            </select>
-            <button onClick={() => AddItem(setFirstMeal)}>Add Item to First Meal</button>
+    setArr(prev => [...prev, newItem]);
+    setNewName("");
+    setNewTime("");
+    setNewStatus("start");
+  };
 
+  /**
+   * פונקציה להצגת כל פריט ברשימת סעודה
+   * @param {Array} arr - מערך של פריטי הסעודה
+   * @param {Function} setArr - פונקציית עדכון המערך
+   */
+  const display = (arr, setArr) =>
+    arr.map((item) => <Cooking key={item.id} item={item} arr={arr} setArr={setArr} />);
 
-            <h2>Second Meal</h2>
-            {display(secondMeal, setSecondMeal)}
-             <input type="text" value={newName} onChange={(e) => setNewName(e.target.value)} />
-            <input type="text" value={newTime} onChange={(e) => setNewTime(e.target.value)} />
-            <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
-                <option value="start">Start</option>
-                <option value="in progress">In Progress</option>
-                <option value="completed">Completed</option>
-            </select>
-            <button onClick={() => AddItem(setSecondMeal)}>Add Item to Second Meal</button>
-           
+  /**
+   * פונקציה פנימית להצגת סעודה שלמה
+   * מחליפה את כל הקוד החוזר של כל סעודה
+   * @param {string} mealName - שם הסעודה להציג בכותרת
+   * @param {Array} arr - מערך הסעודה
+   * @param {Function} setArr - פונקציית עדכון המערך
+   */
+  const renderMeal = (mealName, arr, setArr) => (
+    <>
+      <h2>{mealName}</h2>
+      {display(arr, setArr)}
+      <input
+        type="text"
+        placeholder="שם המאכל"
+        value={newName}
+        onChange={(e) => setNewName(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="זמן הכנה"
+        value={newTime}
+        onChange={(e) => setNewTime(e.target.value)}
+      />
+      <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
+        <option value="start">Start</option>
+        <option value="in progress">In Progress</option>
+        <option value="completed">Completed</option>
+      </select>
+      <button onClick={() => AddItem(setArr)}>Add Item</button>
+      <hr />
+    </>
+  );
 
+  return (
+    <div>
+      {/* הצגת סעודות בהתאם ל-Context */}
+      {shabbatSettings.firstMeal && renderMeal("סעודה ראשונה", firstMeal, setFirstMeal)}
+      {shabbatSettings.secondMeal && renderMeal("סעודה שנייה", secondMeal, setSecondMeal)}
+      {shabbatSettings.thirdMeal && renderMeal("סעודה שלישית", thirdMeal, setThirdMeal)}
 
-            <h2>Third Meal</h2>
-            {display(thirdMeal, setThirdMeal)}
-             <input type="text" value={newName} onChange={(e) => setNewName(e.target.value)} />
-            <input type="text" value={newTime} onChange={(e) => setNewTime(e.target.value)} />
-            <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
-                <option value="start">Start</option>
-                <option value="in progress">In Progress</option>
-                <option value="completed">Completed</option>
-            </select>
-             <button onClick={() => AddItem(setThirdMeal)}>Add Item to Third Meal</button>
-            
-        </div>
-    );
+      <button onClick={() => navigate("/summary")}>
+  אישור
+</button>
+    </div>
+  );
 }

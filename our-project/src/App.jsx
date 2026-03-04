@@ -2,12 +2,13 @@ import { useState } from 'react'
 import { EditShabbatSettings } from './Components/home/EditShabbatSettings'
 import ListTask from "./Components/Task/ListTask.jsx";
 import { ListCooking } from './Components/Cooking/listCooking.jsx'
+import { SummaryPage } from './Components/Cooking/SummaryPage.jsx'
 import './App.css'
 import { Header } from './Components/header/Header.jsx';
 import { ShabbatSettings } from './Components/home/ShabbatSettings.jsx';
 import { ShopingList } from './Components/Shoping/ShopingList.jsx';
 import { ShabbatProvider } from './Components/context/ShabbatContext.jsx';
-// import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 
 function App() {
@@ -34,11 +35,17 @@ function App() {
             {/* <ListCooking to="/ListCooking" end>בישולים</ListCooking>
             <ShopingList to="/ShopingList" end>קניות</ShopingList> */}
       <ShabbatProvider>
-        <Header />
-      <EditShabbatSettings />
-        {/* <ShabbatSettings /> */}
+        <Router>
+          <Header />
+          <Routes>
+            <Route path="/" element={<EditShabbatSettings />} />
+            <Route path="/cookingList" element={<ListCooking />} />
+            <Route path="/summary" element={<SummaryPage />} />
+            <Route path="/tasksList" element={<ListTask />} />
+            <Route path="/ShopingList" element={<ShopingList />} />
+          </Routes>
+        </Router>
       </ShabbatProvider>
-
     </>
   )
 }

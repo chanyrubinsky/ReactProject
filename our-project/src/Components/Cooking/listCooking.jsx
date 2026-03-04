@@ -6,7 +6,6 @@ export function ListCooking() {
     const [firstMeal, setFirstMeal] = useState([]);
     const [secondMeal, setSecondMeal] = useState([]);
     const [thirdMeal, setThirdMeal] = useState([]);
-    const [newIdea, setIdea] = useState(""); // להוספה חדש
     const [newName, setNewName] = useState("");
     const [newTime, setNewTime] = useState("");
     const [newStatus, setNewStatus] = useState("start");
@@ -34,7 +33,7 @@ export function ListCooking() {
         setNewStatus("start");
     };
     const display = (arr, setArr) =>
-        arr.map((item, index) => <Cooking key={item.id} item={item} arr={arr} setArr={setArr} />);
+        arr.map((item) => <Cooking key={item.id} item={item} arr={arr} setArr={setArr} />);
 
     return (
         <div>

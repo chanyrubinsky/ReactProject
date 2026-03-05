@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useShabbat } from "../context/ShabbatContext.jsx";
+import "./ShabbatSettings.css";
 
 export const EditShabbatSettings = () => {
 
@@ -65,7 +66,7 @@ export const EditShabbatSettings = () => {
     // </>
 
 
-    const { shabbatSettings, updateShabbat, setShabbatSettings } = useShabbat();
+    const { shabbatSettings, updateShabbat, setIsEditing } = useShabbat();
     const [form, setForm] = useState(() => shabbatSettings || {});
 
     useEffect(() => setForm(shabbatSettings || {}), [shabbatSettings]);
@@ -81,8 +82,6 @@ export const EditShabbatSettings = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         updateShabbat(form);
-        // switch back to view mode via context
-        // if (setIsEditing) setIsEditing(false);
     };
 
     const handleReset = () => {
@@ -96,17 +95,16 @@ export const EditShabbatSettings = () => {
             thirdMeal: false,
             numberOfGuests: 0,
         };
-        setShabbatSettings(defaults);
         setForm(defaults);
     };
 
     return (
-        <form onSubmit={handleSubmit} style={{ border: '1px solid #ddd', padding: 12 }}>
+        <form onSubmit={handleSubmit}>
             <h2>עריכת הגדרות שבת</h2>
 
             <label>
                 פרשת שבת:
-                <input name="weekParsha" value={form.weekParsha || ''} onChange={handleChange} />
+                <input name="weekParsha" value={form.weekParsha || ''} onChange={handleChange} placeholder="למשל: ויגש" />
             </label>
             <br />
 
@@ -144,9 +142,11 @@ export const EditShabbatSettings = () => {
             )}
 
             <br />
-            <button type="submit">שמור הגדרות</button>
-            <button type="button" onClick={handleReset} style={{ marginLeft: 8 }}>איפוס ברירת מחדל</button>
-            {/* <button type="button" onClick={() => setIsEditing && setIsEditing(false)} style={{ marginLeft: 8 }}>הצג הגדרות</button> */}
+            <div style={{ marginTop: 16, display: 'flex', gap: 8 }}>
+                <button type="submit">שמור הגדרות</button>
+                <button type="button" onClick={handleReset}>איפוס הגדרות</button>
+                <button type="button" onClick={() => setIsEditing(false)} style={{ marginLeft: 'auto' }}>ביטול</button>
+            </div>
         </form>
     );
 };

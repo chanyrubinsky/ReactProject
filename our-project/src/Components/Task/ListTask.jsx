@@ -1,61 +1,50 @@
 import { useEffect, useState } from "react";
 import TaskGroup from "./TaskGroup";
-
-import {
-  getHomeTasks,
-  getHostingTasks,
-  getGuestTasks
-} from '../data/tasksService';
-import OneTask from "./OneTask";
+import FinalTaskList from "./FinalTaskList";
+import { getHomeTasks, getHostingTasks, getGuestTasks } from '../data/tasksService';
+import { useShabbat } from "../context/ShabbatContext";
 
 const ListTask = () => {
-
   const [homeTasks, setHomeTasks] = useState([]);
   const [hostingTasks, setHostingTasks] = useState([]);
   const [guestTasks, setGuestTasks] = useState([]);
+  const [confirmedTasks, setConfirmedTasks] = useState(null);
 
-
- 
+  const { shabbatSettings } = useShabbat();
 
   useEffect(() => {
-    getHomeTasks().then(data => setHomeTasks(prev => [...prev, ...data]));
-    getHostingTasks().then(data => setHostingTasks(prev => [...prev, ...data]));
-    getGuestTasks().then(data => setGuestTasks(prev => [...prev, ...data]));
+    getHomeTasks().then(data => setHomeTasks(data));
+    getHostingTasks().then(data => setHostingTasks(data));
+    getGuestTasks().then(data => setGuestTasks(data));
   }, []);
 
-  //פונקציה שמציגה  כל מערך של משימות//
-  /*const renderTasks4 = (arr,setarr) => {
-    
-      return arr.map((task) => <OneTask key={task.id} task={task} arr={arr}  setarr={setarr}/>);
-      
-    };
-  
-  
-  
-    const renderTasks1 = () => {
-      return homeTasks.map((task) => <OneTask key={task.id} task={task} />);
-    };
-    const renderTasks2 = () => {
-      return hostingTasks.map((task) => <OneTask key={task.id} task={task} />);
-    };
-  
-    const renderTasks3 = () => {
-      return guestTasks.map((task) => <OneTask key={task.id} task={task} />);
-    };*/
+  const getTasksForUser = () => {
+    if (!shabbatSettings) return [...homeTasks, ...hostingTasks, ...guestTasks];
 
+    if (shabbatSettings.isTraveling) return guestTasks;
+    if (shabbatSettings.numberOfGuests > 0) return hostingTasks;
+    return homeTasks;
+  };
+
+  const setTasksForUser = (newArr) => {
+    if (shabbatSettings.isTraveling) setGuestTasks(newArr);
+    else if (shabbatSettings.numberOfGuests > 0) setHostingTasks(newArr);
+    else setHomeTasks(newArr);
+  };
+
+  const tasks = getTasksForUser();
 
   return (
     <div>
-
-      <h2>רשימת משימות:</h2>
-      <TaskGroup arr={homeTasks} setarr={setHomeTasks} />
-      <TaskGroup arr={hostingTasks} setarr={setHostingTasks} />
-      <TaskGroup arr={guestTasks} setarr={setGuestTasks} />
-
-
-
-
-
+      {!confirmedTasks ? (
+        <TaskGroup
+          arr={tasks}
+          setarr={setTasksForUser}
+          onConfirm={(finalArr) => setConfirmedTasks(finalArr)}
+        />
+      ) : (
+        <FinalTaskList tasks={confirmedTasks} />
+      )}
     </div>
   );
 };

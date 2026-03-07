@@ -1,4 +1,4 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useShabbat } from '../context/ShabbatContext';
 import { Cooking } from './Cooking';
@@ -9,8 +9,9 @@ import { getBasicCooking, getFirstMeal, getSecondMeal, getThirdMeal } from '../d
  * משתמשת ב-Context כדי לדעת אילו סעודות להציג והאם המשתמש נוסע.
  */
 export function ListCooking() {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const { shabbatSettings } = useShabbat(); // קריאה ל-Context
+  const [basicMeal, setBasicMeal] = useState([]); // רשימת הבישולים לסעודה בסיסית (למשתמשים שנוסעים)
   const [firstMeal, setFirstMeal] = useState([]);
   const [secondMeal, setSecondMeal] = useState([]);
   const [thirdMeal, setThirdMeal] = useState([]);
@@ -19,26 +20,26 @@ export function ListCooking() {
   const [newStatus, setNewStatus] = useState("start"); // סטטוס של מאכל חדש
 
   /**
-   * useEffect שמטעין את רשימות הסעודות בהתאם למצב המשתמש:
+   * useEffect שמטעין את רשימות הסعودות בהתאם למצב המשתמש:
    * - אם נוסע → רק רשימה בסיסית
-   * - אחרת → רק הסעודות שהמשתמש סימן
+   * - אחרת → רק הסعودות שהמשתמש סימן
    */
   useEffect(() => {
     if (shabbatSettings.isTraveling) {
-      getBasicCooking().then(data => setFirstMeal(data)); // נסיעה - משתמשים רק ברשימה בסיסית
+      getBasicCooking().then(data => setBasicMeal(data)); // נסיעה - משתמשים רק ברשימה בסיסית
+      setFirstMeal([]);
       setSecondMeal([]);
       setThirdMeal([]);
     } else {
+          getBasicCooking().then(data => setBasicMeal(data)); // נסיעה - משתמשים רק ברשימה בסיסית)
       if (shabbatSettings.firstMeal) getFirstMeal().then(data => setFirstMeal(data));
       if (shabbatSettings.secondMeal) getSecondMeal().then(data => setSecondMeal(data));
       if (shabbatSettings.thirdMeal) getThirdMeal().then(data => setThirdMeal(data));
     }
   }, [shabbatSettings]);
 
-  /**
-   * פונקציה להוספת פריט חדש לרשימה
-   * @param {Function} setArr - הפונקציה לעדכון המערך של הסעודה
-   */
+
+
   const AddItem = (setArr) => {
     if (!newName.trim() || !newTime.trim()) return;
 
@@ -63,13 +64,6 @@ export function ListCooking() {
   const display = (arr, setArr) =>
     arr.map((item) => <Cooking key={item.id} item={item} arr={arr} setArr={setArr} />);
 
-  /**
-   * פונקציה פנימית להצגת סעודה שלמה
-   * מחליפה את כל הקוד החוזר של כל סעודה
-   * @param {string} mealName - שם הסעודה להציג בכותרת
-   * @param {Array} arr - מערך הסעודה
-   * @param {Function} setArr - פונקציית עדכון המערך
-   */
   const renderMeal = (mealName, arr, setArr) => (
     <>
       <h2>{mealName}</h2>
@@ -102,10 +96,11 @@ export function ListCooking() {
       {shabbatSettings.firstMeal && renderMeal("סעודה ראשונה", firstMeal, setFirstMeal)}
       {shabbatSettings.secondMeal && renderMeal("סעודה שנייה", secondMeal, setSecondMeal)}
       {shabbatSettings.thirdMeal && renderMeal("סעודה שלישית", thirdMeal, setThirdMeal)}
+      {renderMeal("סעודה בסיסית", basicMeal, setBasicMeal)}
 
       <button onClick={() => navigate("/summary")}>
-  אישור
-</button>
+        אישור
+      </button>
     </div>
   );
 }

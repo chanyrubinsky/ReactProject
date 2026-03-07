@@ -13,11 +13,11 @@ const defaultSettings = {
 
 export const ShabbatContext = createContext({
     shabbatSettings: defaultSettings,
-    setShabbatSettings: () => {},
-    updateShabbat: () => {},
+    setShabbatSettings: () => { },
+    updateShabbat: () => { },
     isEditing: false,
-    setIsEditing: () => {},
-    resetSettings: () => {},
+    setIsEditing: () => { },
+    resetSettings: () => { },
 });
 
 export const ShabbatProvider = ({ children, initial = defaultSettings }) => {
